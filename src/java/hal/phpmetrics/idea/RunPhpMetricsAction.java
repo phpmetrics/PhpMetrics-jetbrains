@@ -11,10 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-import java.net.URISyntaxException;
-import com.intellij.openapi.diagnostic.Logger;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import com.intellij.openapi.ui.MessageType;
@@ -43,8 +40,7 @@ public class RunPhpMetricsAction extends AnAction {
 
             File phar = getExternalPath("/phar/phpmetrics.phar");
 
-            String[] commands = new String[]{"php", phar.toURI().getPath(), "--report-html=" + destination, currentDirectory.getPath()};
-
+            String[] commands = new String[]{"php", phar.getAbsolutePath(), "--report-html=" + destination, currentDirectory.getPath()};
 
             Runtime runtime = Runtime.getRuntime();
             final Process process = runtime.exec(commands);
@@ -62,12 +58,7 @@ public class RunPhpMetricsAction extends AnAction {
                         }
 
                         // open browser
-                        try {
-                            URI uri = new URI("file://" + destination.toString());
-                            BrowserUtil.browse(uri);
-                        } catch (URISyntaxException uriE) {
-                            uriE.printStackTrace();
-                        }
+                        BrowserUtil.browse(destination);
 
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
@@ -130,6 +121,10 @@ public class RunPhpMetricsAction extends AnAction {
             }
         } else {
             file = new File(res.getFile().toString().replace("%20", "\\ "));
+
+            if (!file.exists()) {
+                file = new File(res.getFile().toString().replace("%20", " "));
+            }
         }
 
         if (file != null && !file.exists()) {
