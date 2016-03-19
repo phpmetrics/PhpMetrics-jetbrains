@@ -29,6 +29,8 @@
   <depends>com.intellij.modules.platform</depends>
 
   <extensions defaultExtensionNs="com.intellij">
+    <projectConfigurable instance="hal.phpmetrics.idea.settings.SettingsForm" groupId="tools" />
+    <projectService serviceImplementation="hal.phpmetrics.idea.Settings" />
     <!-- Add your extensions here -->
   </extensions>
 
