@@ -28,9 +28,14 @@ public class RunPhpMetricsAction extends AnAction {
             return;
         }
 
+        VirtualFile currentDirectory = PlatformDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+        if (currentDirectory == null) {
+            inform(e, "Please select a folder of your project before running PhpMetrics", MessageType.WARNING);
+            return;
+        }
+
         inform(e, "PhpMetrics started. Your browser will be run in few minutes....", MessageType.INFO);
 
-        VirtualFile currentDirectory = PlatformDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
         try {
             CliRunner cliRunner = new CliRunner(Settings.getInstance(project).pathToBinary);
             final File destination = File.createTempFile("phpmetrics-idea", ".html");
